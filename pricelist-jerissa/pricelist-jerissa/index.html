@@ -256,6 +256,50 @@ footer{text-align:center;color:var(--muted);font-size:.9rem;background:rgba(255,
 @keyframes pop{from{transform:scale(.92);opacity:.4}to{transform:none;opacity:1}}
 @media (prefers-reduced-motion:reduce){.splash,.splash-card{animation:none;transition:none}}
 @media (prefers-reduced-motion:reduce){.tile{transition:none}.tile:hover{transform:none}}
+
+/* ===== Animasi ===== */
+.floaties{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
+.floaties span{position:absolute;bottom:-40px;font-family:var(--display);color:#fff;opacity:0;text-shadow:0 2px 0 rgba(31,61,134,.12)}
+.burst{position:fixed;z-index:60;pointer-events:none;font-size:16px;line-height:1;color:var(--pink);translate:-50% -50%}
+@keyframes rise{from{opacity:0;transform:translateY(26px) scale(.97)}to{opacity:1;transform:none}}
+@keyframes popIn{0%{opacity:0;transform:scale(.4) rotate(-8deg)}70%{opacity:1;transform:scale(1.08) rotate(2deg)}100%{transform:none}}
+@keyframes slideIn{from{opacity:0;transform:translateX(-14px)}to{opacity:1;transform:none}}
+@keyframes floaty{0%,100%{translate:0 0}50%{translate:0 -6px}}
+@keyframes wiggle{0%,100%{rotate:0deg}25%{rotate:-7deg}75%{rotate:7deg}}
+@keyframes twinkle{0%,100%{transform:scale(1) rotate(0);opacity:1}50%{transform:scale(.55) rotate(45deg);opacity:.5}}
+@keyframes hop{0%,100%{translate:0 0}40%{translate:0 -14px}60%{translate:0 -14px}}
+@keyframes ring{0%{box-shadow:0 5px 0 #b83872,0 0 0 0 rgba(232,103,154,.55)}100%{box-shadow:0 5px 0 #b83872,0 0 0 16px rgba(232,103,154,0)}}
+@keyframes bump{0%{transform:scale(1)}35%{transform:scale(1.14)}100%{transform:scale(1)}}
+@keyframes shine{0%,60%{translate:-120% 0}100%{translate:220% 0}}
+@keyframes drift{0%{opacity:0;transform:translateY(0) rotate(0)}10%{opacity:.9}90%{opacity:.9}100%{opacity:0;transform:translateY(-110vh) rotate(200deg)}}
+@keyframes burst{from{opacity:1;transform:translate(0,0) scale(1)}to{opacity:0;transform:translate(var(--dx),var(--dy)) scale(.4)}}
+@keyframes nudge{0%,100%{translate:0 0}50%{translate:-4px 0}}
+
+@media (prefers-reduced-motion:no-preference){
+  .floaties span{animation:drift var(--d,18s) linear var(--w,0s) infinite}
+  .burst{animation:burst .7s ease-out forwards}
+  .view.enter>*{animation:rise .55s cubic-bezier(.2,.8,.3,1.15) backwards;animation-delay:calc(var(--i,0)*90ms)}
+  .view.enter .app-grid .tile{animation:popIn .55s cubic-bezier(.2,.8,.3,1.2) backwards;animation-delay:calc(250ms + var(--j,0)*60ms)}
+  .view.enter .grid>.card,.view.enter .info>.card{animation:rise .5s ease backwards;animation-delay:calc(200ms + var(--j,0)*110ms)}
+  .view.enter .incl li,.view.enter .pages li{animation:popIn .45s ease backwards;animation-delay:calc(250ms + var(--j,0)*35ms)}
+  .view.enter .tiers li{animation:slideIn .4s ease backwards;animation-delay:calc(350ms + var(--j,0)*70ms)}
+  .app-grid .ico svg,.page-head .ico svg{animation:floaty 3.2s ease-in-out infinite;animation-delay:calc(var(--j,0)*-.45s)}
+  .app-grid .tile:hover .ico,.tile:focus-visible .ico{animation:wiggle .5s ease}
+  .spark{animation:twinkle 2.4s ease-in-out infinite}
+  .spark.b{animation-delay:-.8s}.spark.c{animation-delay:-1.6s}
+  .bow{animation:wiggle 2.6s ease-in-out infinite;transform-origin:50% 50%}
+  h1 span{display:inline-block;animation:floaty 2.8s ease-in-out infinite}
+  .splash-sheep svg{animation:hop 1.6s ease-in-out infinite}
+  .splash-sheep svg:nth-child(2){animation-delay:.2s}.splash-sheep svg:nth-child(3){animation-delay:.4s}
+  .splash-card .steps-mini li{animation:popIn .45s ease backwards}
+  .splash-card .steps-mini li:nth-child(1){animation-delay:.35s}.splash-card .steps-mini li:nth-child(2){animation-delay:.5s}.splash-card .steps-mini li:nth-child(3){animation-delay:.65s}
+  .splash-btn{animation:ring 1.6s ease-out infinite}
+  .result .total.bump{animation:bump .35s ease}
+  .tiers li.acc,.opt,.promo{position:relative;overflow:hidden}
+  .tiers li.acc::after,.opt::after,.promo::after{content:"";position:absolute;inset:0;width:40%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.65),transparent);animation:shine 3.5s ease-in-out infinite;pointer-events:none}
+  .back:hover svg{animation:nudge .6s ease infinite}
+  .music-btn:not(.on){animation:floaty 2.4s ease-in-out infinite}
+}
 </style>
 
 </head>
@@ -1019,6 +1063,17 @@ footer{text-align:center;color:var(--muted);font-size:.9rem;background:rgba(255,
     var target=views.indexOf(h)>-1?h:'home';
     document.querySelectorAll('.view').forEach(function(v){v.hidden=(v.id!==target)});
     window.scrollTo(0,0);
+    animateIn(document.getElementById(target));
+  }
+  // Animasi masuk tiap halaman: elemen muncul bergantian
+  function animateIn(v){
+    if(!v)return;
+    v.classList.remove('enter');
+    Array.prototype.forEach.call(v.children,function(c,i){c.style.setProperty('--i',i)});
+    v.querySelectorAll('.app-grid .tile,.grid>.card,.info>.card,.incl li,.pages li,.tiers li').forEach(function(el){
+      el.style.setProperty('--j',Array.prototype.indexOf.call(el.parentNode.children,el));
+    });
+    void v.offsetWidth; v.classList.add('enter');
   }
   window.addEventListener('hashchange',route); route();
 
@@ -1057,7 +1112,41 @@ footer{text-align:center;color:var(--muted);font-size:.9rem;background:rgba(255,
     sp.hidden=false; document.body.style.overflow='hidden';
     setTimeout(function(){document.getElementById('splash-go').focus()},50);
   }
-  function closeSplash(){sp.classList.add('out');document.body.style.overflow='';setTimeout(function(){sp.hidden=true},360);}
+  function closeSplash(){if(sp.hidden||sp.classList.contains('out'))return;sp.classList.add('out');document.body.style.overflow='';animateIn(document.getElementById('home'));setTimeout(function(){sp.hidden=true},360);}
+
+  var calm=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // Partikel melayang di latar
+  if(!calm){
+    var fl=document.createElement('div'); fl.className='floaties'; fl.setAttribute('aria-hidden','true');
+    var sym=['✦','♡','✧','☁','♡','✦','✧','♡','☁','✦','♡','✧'];
+    sym.forEach(function(s,i){
+      var e=document.createElement('span'); e.textContent=s;
+      e.style.left=(4+i*8+Math.random()*4)+'%';
+      e.style.fontSize=(14+Math.random()*16)+'px';
+      e.style.setProperty('--d',(14+Math.random()*12)+'s');
+      e.style.setProperty('--w',(-Math.random()*20)+'s');
+      if(i%3===0)e.style.color='var(--pink-soft)';
+      fl.appendChild(e);
+    });
+    document.body.insertBefore(fl,document.body.firstChild);
+    // Hati kecil saat tap/klik
+    document.addEventListener('pointerdown',function(ev){
+      for(var b=0;b<6;b++){
+        var h=document.createElement('span'); h.className='burst'; h.setAttribute('aria-hidden','true');
+        h.textContent=b%2?'♡':'✦';
+        var a=Math.PI*2*b/6+Math.random()*.5, r=30+Math.random()*24;
+        h.style.left=ev.clientX+'px'; h.style.top=ev.clientY+'px';
+        h.style.setProperty('--dx',Math.cos(a)*r+'px'); h.style.setProperty('--dy',Math.sin(a)*r+'px');
+        if(b%3===1)h.style.color='var(--gold)';
+        document.body.appendChild(h);
+        setTimeout(function(x){return function(){x.remove()}}(h),750);
+      }
+    },{passive:true});
+  }
+  // Total kalkulator "membal" tiap kali berubah
+  document.querySelectorAll('.result .total').forEach(function(t){
+    new MutationObserver(function(){t.classList.remove('bump');void t.offsetWidth;t.classList.add('bump');}).observe(t,{childList:true,characterData:true,subtree:true});
+  });
   document.getElementById('splash-go').addEventListener('click',closeSplash);
   document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!sp.hidden)closeSplash();});
 
