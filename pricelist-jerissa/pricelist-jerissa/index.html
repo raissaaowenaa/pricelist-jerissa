@@ -257,6 +257,80 @@ footer{text-align:center;color:var(--muted);font-size:.9rem;background:rgba(255,
 @media (prefers-reduced-motion:reduce){.splash,.splash-card{animation:none;transition:none}}
 @media (prefers-reduced-motion:reduce){.tile{transition:none}.tile:hover{transform:none}}
 
+/* ===== Responsif semua perangkat ===== */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{overflow-x:hidden}
+/* splash: tetap bisa di-scroll & tidak terpotong di layar pendek */
+.splash{display:flex;align-items:flex-start}
+.splash-card{margin:auto}
+@media (max-height:700px){
+  .splash-card{padding:18px 18px 18px;gap:8px}
+  .splash-sheep svg{width:56px;height:56px}.splash-sheep svg.big{width:80px;height:80px}
+  .splash-card p{font-size:.92rem}
+  .splash-btn{padding:11px 26px}
+}
+@media (max-height:480px) and (orientation:landscape){
+  .splash-sheep{display:none}
+  .splash-card{max-width:560px}
+}
+/* HP kecil */
+@media (max-width:420px){
+  body{font-size:15px}
+  .wrap{gap:22px;padding-block:18px 96px}
+  .view{gap:20px}
+  header{padding:20px 14px 22px;border-radius:26px}
+  .apps{padding:16px 8px 18px;border-radius:26px}
+  .tiles.app-grid{gap:14px 4px}
+  .page-head{padding:16px;gap:12px;border-radius:24px}
+  .page-head .ico{width:72px;height:72px;border-radius:22px}
+  .page-head .ico svg{width:64px;height:64px}
+  .card{padding:16px;border-radius:20px}
+  .grid,.info,.order-opts{grid-template-columns:1fr}
+  .incl ol{grid-template-columns:1fr}
+  .pages{grid-template-columns:repeat(auto-fill,minmax(92px,1fr))}
+  .calc-row{flex-direction:column;align-items:stretch}
+  .field input,.field select{width:100%;min-width:0}
+  .calc-row.three .field select{min-width:0}
+  .seg div{display:grid;grid-template-columns:1fr 1fr}
+  .seg span{display:block;text-align:center;padding:10px 8px}
+  .result .total{font-size:1.7rem}
+  .tiers li{flex-wrap:wrap}
+  .music-btn{width:52px;height:52px}
+}
+@media (max-width:340px){
+  .tiles.app-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .steps-mini li{font-size:.82rem}
+  h1{font-size:2.1rem}
+}
+/* Tablet */
+@media (min-width:640px) and (max-width:1023px){
+  .apps{max-width:none}
+  .tiles.app-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+/* Laptop & layar lebar */
+@media (min-width:1024px){
+  .wrap{max-width:1080px}
+  .apps{max-width:none;padding:26px 24px 28px}
+  .tiles.app-grid{grid-template-columns:repeat(6,minmax(0,1fr));gap:24px 12px}
+  .grid{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+}
+@media (min-width:1600px){
+  .wrap{max-width:1200px}
+  body{font-size:17px}
+}
+/* playlist: bisa dikecilkan tanpa mematikan musik (iframe tetap dirender) */
+.music-card{transform-origin:100% 100%;transition:transform .3s ease,opacity .3s ease}
+.music-card.mini{position:absolute;right:0;bottom:70px;opacity:0;transform:scale(.2);pointer-events:none}
+@media (max-width:420px),(max-height:560px){
+  .music-card{width:min(240px,calc(100vw - 24px))}
+  .pl-list{max-height:96px}
+}
+@media (max-height:480px){.music-card .frame{aspect-ratio:auto;height:70px}}
+/* layar sentuh: hindari efek hover yang "nyangkut" */
+@media (hover:none){
+  .tile:hover,.app-grid .tile:hover,.opt:hover{transform:none}
+}
+
 /* ===== Animasi ===== */
 .floaties{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
 .floaties span{position:absolute;bottom:-40px;font-family:var(--display);color:#fff;opacity:0;text-shadow:0 2px 0 rgba(31,61,134,.12)}
@@ -1241,14 +1315,19 @@ plList.addEventListener("click",e=>{const b=e.target.closest("button[data-i]");i
 document.getElementById("plPrev").onclick=()=>plPlay(plCur-1);
 document.getElementById("plNext").onclick=()=>plPlay(plCur+1);
 plMark(0);
-mBtn.addEventListener("click",()=>{const on=mBtn.getAttribute("aria-pressed")==="true";
-  if(on){mFrame.innerHTML="";mCard.hidden=true;}else{mCard.hidden=false;plPlay(plCur);}
-  mBtn.setAttribute("aria-pressed",String(!on));mBtn.setAttribute("aria-label",on?"Putar musik":"Matikan musik");mBtn.classList.toggle("on",!on);});
-// Musik mulai saat pengunjung pertama kali menyentuh/klik web (termasuk tombol "Mulai cek harga")
-const autoStart=e=>{if(e.target.closest&&e.target.closest(".music"))return;if(mBtn.getAttribute("aria-pressed")!=="true")mBtn.click();["pointerdown","keydown"].forEach(t=>document.removeEventListener(t,autoStart,true));};
+// Tombol musik: kalau mati → putar & tampilkan kartu; kalau sedang main → kecilkan/tampilkan kartu (musik tetap jalan). Tombol × = matikan musik.
+let miniTimer=null;
+const isOn=()=>mBtn.getAttribute("aria-pressed")==="true";
+const setMini=m=>{clearTimeout(miniTimer);mCard.classList.toggle("mini",m);mBtn.setAttribute("aria-label",m?"Tampilkan playlist":"Kecilkan playlist");mBtn.setAttribute("aria-expanded",String(!m));};
+const stopMusic=()=>{clearTimeout(miniTimer);mFrame.innerHTML="";mCard.hidden=true;mCard.classList.remove("mini");mBtn.setAttribute("aria-pressed","false");mBtn.setAttribute("aria-label","Putar musik");mBtn.removeAttribute("aria-expanded");mBtn.classList.remove("on");};
+const startMusic=autoMini=>{mCard.hidden=false;setMini(false);plPlay(plCur);mBtn.setAttribute("aria-pressed","true");mBtn.classList.add("on");if(autoMini)miniTimer=setTimeout(()=>setMini(true),4000);};
+mBtn.addEventListener("click",()=>{["pointerdown","keydown"].forEach(t=>document.removeEventListener(t,autoStart,true));
+  if(!isOn())startMusic(false);else setMini(!mCard.classList.contains("mini"));});
+// Musik mulai saat pengunjung pertama kali menyentuh/klik web (termasuk tombol "Mulai cek harga"); kartu playlist otomatis mengecil supaya tidak menutupi harga
+const autoStart=e=>{if(e.target.closest&&e.target.closest(".music"))return;["pointerdown","keydown"].forEach(t=>document.removeEventListener(t,autoStart,true));if(!isOn())startMusic(true);};
 ["pointerdown","keydown"].forEach(t=>document.addEventListener(t,autoStart,true));
-mBtn.addEventListener("click",()=>["pointerdown","keydown"].forEach(t=>document.removeEventListener(t,autoStart,true)));
-document.getElementById("musicX").addEventListener("click",()=>{if(mBtn.getAttribute("aria-pressed")==="true")mBtn.click();});
+mCard.addEventListener("pointerdown",()=>clearTimeout(miniTimer));
+document.getElementById("musicX").addEventListener("click",stopMusic);
 })();
 </script>
 </body>
