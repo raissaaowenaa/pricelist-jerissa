@@ -257,6 +257,60 @@ footer{text-align:center;color:var(--muted);font-size:.9rem;background:rgba(255,
 @media (prefers-reduced-motion:reduce){.splash,.splash-card{animation:none;transition:none}}
 @media (prefers-reduced-motion:reduce){.tile{transition:none}.tile:hover{transform:none}}
 
+/* ===== Top bar & profil (sama seperti web utama) ===== */
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;background:rgba(255,255,255,.92);border:3px solid var(--paper);border-radius:999px;padding:8px 10px 8px 8px;box-shadow:0 6px 0 rgba(31,61,134,.12)}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo-badge{width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,#fff 0,#ffd6e6 100%);border:3px solid #fff;box-shadow:0 0 0 2px #ff9ec4,0 6px 12px -6px rgba(224,79,143,.6);display:grid;place-items:center;overflow:hidden;flex:none;transition:rotate .3s}
+.logo-badge img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.logo:hover .logo-badge{rotate:-8deg}
+.logo-text{display:flex;flex-direction:column;line-height:1}
+.logo-name{font-family:var(--display);font-weight:700;font-size:1.6rem;background:linear-gradient(180deg,#ff7eb3,#e04f8f);-webkit-background-clip:text;background-clip:text;color:transparent}
+.logo-sub{font-family:var(--display);font-weight:600;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:3px}
+.nav-ic{width:42px;height:42px;display:grid;place-items:center;border-radius:50%;color:#e04f8f;border:2px solid #ffc6dc;background:var(--paper);flex:none}
+.nav-ic svg{width:24px;height:24px}
+.nav-ic:hover{border-color:#e04f8f}
+.logo:focus-visible,.nav-ic:focus-visible{outline:3px solid var(--gold);outline-offset:3px;border-radius:999px}
+
+.profile{background:var(--paper);border:3px solid #ffc6dc;border-radius:30px;overflow:hidden;box-shadow:0 18px 34px -20px rgba(224,79,143,.55),0 6px 0 rgba(31,61,134,.12)}
+.cover{display:block;aspect-ratio:3/1;background:#ffe1ec}
+.cover img{display:block;width:100%;height:100%;object-fit:cover}
+.prof-row{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:6px 18px;align-items:end;padding:0 24px 20px}
+.prof-ava{width:150px;height:150px;border-radius:50%;object-fit:cover;background:#fff;border:6px solid #fff;box-shadow:0 0 0 3px #ff9ec4,0 10px 20px -8px rgba(224,79,143,.6);margin-top:-75px;position:relative}
+.prof-info{min-width:0;padding-bottom:4px}
+.prof-info h2{font-family:var(--display);font-weight:700;font-size:clamp(1.4rem,3vw,2rem);line-height:1.15;color:var(--ink);display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:0}
+.verif svg{width:1em;height:1em;display:block}
+.prof-handle{margin:4px 0 8px;color:var(--muted);font-weight:700;font-size:.95rem}
+.prof-chips{display:flex;flex-wrap:wrap;gap:6px}
+.prof-chips span{background:#ffe1ec;color:#e04f8f;font-weight:800;font-size:.8rem;border-radius:999px;padding:4px 12px}
+.prof-cta{display:flex;flex-direction:column;gap:10px;padding-bottom:4px}
+.pbtn{display:inline-flex;align-items:center;justify-content:center;background:#e04f8f;color:#fff;font-family:var(--display);font-weight:600;font-size:1rem;text-decoration:none;border-radius:999px;padding:11px 22px;box-shadow:0 5px 0 #b83872;white-space:nowrap;transition:transform .18s,box-shadow .18s}
+.pbtn:hover{transform:translateY(-2px);box-shadow:0 7px 0 #b83872}
+.pbtn:active{transform:translateY(3px);box-shadow:0 2px 0 #b83872}
+.pbtn.ghost{background:var(--paper);color:#e04f8f;border:2px solid #ffc6dc;box-shadow:0 5px 0 #ffc6dc}
+.pbtn:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+@media (max-width:860px){
+  .prof-row{grid-template-columns:auto minmax(0,1fr);padding:0 16px 16px}
+  .prof-cta{grid-column:1/-1;flex-direction:row}.prof-cta .pbtn{flex:1}
+  .prof-ava{width:110px;height:110px;margin-top:-55px;border-width:5px}
+}
+@media (max-width:520px){
+  .prof-row{grid-template-columns:minmax(0,1fr);justify-items:center;text-align:center}
+  .prof-info h2{justify-content:center}.prof-chips{justify-content:center}
+  .prof-cta{width:100%}.prof-cta .pbtn{padding:10px 8px;font-size:.9rem}
+  .cover{aspect-ratio:2/1}.cover img{object-position:30% 50%}
+  .prof-ava{width:92px;height:92px;margin-top:-46px;border-width:4px}
+}
+@media (max-width:380px){
+  .logo-name{font-size:1.35rem}.logo-badge{width:42px;height:42px}
+  .prof-info h2{font-size:1.25rem}.prof-handle{font-size:.82rem}
+}
+@media (prefers-reduced-motion:no-preference){
+  .logo-badge{animation:wiggle 5s ease-in-out infinite}
+  .view.enter .prof-ava{animation:popIn .6s cubic-bezier(.2,.8,.3,1.2) .25s backwards}
+  .view.enter .prof-chips span{animation:popIn .45s ease backwards}
+  .view.enter .prof-chips span:nth-child(1){animation-delay:.45s}.view.enter .prof-chips span:nth-child(2){animation-delay:.55s}.view.enter .prof-chips span:nth-child(3){animation-delay:.65s}
+}
+
 /* ===== Responsif semua perangkat ===== */
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 body{overflow-x:hidden}
@@ -491,8 +545,33 @@ body{overflow-x:hidden}
 
 <div class="wrap">
 
+  <!-- TOP BAR (semua halaman) -->
+  <div class="topbar">
+    <a class="logo" href="#" aria-label="Jerissa, joki tugas — ke menu pricelist">
+      <span class="logo-badge"><img src="avatar.webp" alt="" width="46" height="46"></span>
+      <span class="logo-text"><span class="logo-name">Jerissa</span><span class="logo-sub">joki tugas ✿</span></span>
+    </a>
+    <a class="nav-ic" href="https://jokibyjerissa.vercel.app/#sk" target="_blank" rel="noopener" aria-label="Syarat dan ketentuan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.5"/><path d="M9.5 9.2a2.6 2.6 0 0 1 5 .9c0 1.8-2.5 2.2-2.5 3.9"/><circle cx="12" cy="17.2" r=".6" fill="currentColor"/></svg></a>
+  </div>
+
   <!-- HOME -->
   <div class="view" id="home">
+    <div class="profile">
+      <picture class="cover">
+        <source media="(max-width:700px)" srcset="header-sm.webp">
+        <img src="header.webp" fetchpriority="high" decoding="async" alt="Joki tugas Jerissa: trusted since 2021 with 6k+ testi" width="1800" height="600">
+      </picture>
+      <div class="prof-row">
+        <img class="prof-ava" src="avatar.webp" alt="Foto profil Jerissa" width="150" height="150">
+        <div class="prof-info">
+          <h2>Joki Tugas by Jerissa <span class="verif" aria-label="Akun resmi"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 1.8 3-.2 1 2.8 2.6 1.6-.7 2.9 1.2 2.7-2.2 2 .1 3-3 .6-1.7 2.5-2.8-1L12 22l-1.9-1.3-2.8 1-1.7-2.5-3-.6.1-3-2.2-2 1.2-2.7-.7-2.9L3.6 5.6l1-2.8 3 .2z" fill="#ff7eb3"/><path d="M8 12.2l2.6 2.6L16.2 9" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span></h2>
+          <p class="prof-handle">@kuxcink · Trusted since 2021 · 6000+ honest testimoni</p>
+          <div class="prof-chips"><span>✿ Semua jurusan</span><span>♥ Fast response</span><span>★ Revisi sesuai S&amp;K</span></div>
+        </div>
+        <div class="prof-cta"><a class="pbtn" href="https://jokibyjerissa.vercel.app/#pesan" target="_blank" rel="noopener">Pesan sekarang</a><a class="pbtn ghost" href="https://jokibyjerissa.vercel.app/#testimoni" target="_blank" rel="noopener">Lihat testimoni</a></div>
+      </div>
+    </div>
+
     <header>
       <span class="spark a">✦</span><span class="spark b">✦</span><span class="spark c">✦</span>
       <svg class="bow" viewBox="0 0 56 34" aria-hidden="true"><path d="M28 17C20 4 4 2 4 12s14 12 24 5zM28 17c8-13 24-15 24-5s-14 12-24 5z" fill="var(--pink-soft)" stroke="var(--pink)" stroke-width="2.5" stroke-linejoin="round"/><circle cx="28" cy="17" r="5" fill="var(--pink)"/></svg>
