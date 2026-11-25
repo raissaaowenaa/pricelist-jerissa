@@ -22,6 +22,7 @@
   --t9:#eef7d6; --t9i:#5f8a12;
   --t10:#ffe3f3; --t10i:#c0459a;
   --t11:#ffece9; --t11i:#cf4b3f;
+  --t12:#e3f6f8; --t12i:#1d8293;
   --display:"Fredoka","Nunito",ui-rounded,system-ui,sans-serif;
   --body:"Nunito",ui-rounded,system-ui,sans-serif;
 }
@@ -68,6 +69,11 @@ h1{color:var(--ink);text-shadow:3px 3px 0 var(--pink-line)}
 .tile[href="#literature-review"]{--c:var(--t9);--ci:var(--t9i)}
 .tile[href="#power-point"]{--c:var(--t10);--ci:var(--t10i)}
 .tile[href="#cari-jurnal"]{--c:var(--t11);--ci:var(--t11i)}
+.tile[href="#cari-data"]{--c:var(--t12);--ci:var(--t12i)}
+#cari-data .page-head{--c:var(--t12);--ci:var(--t12i)}
+.formula{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px 8px;background:var(--pink-soft);border-radius:16px;padding:12px 14px;font-weight:800;text-align:center}
+.formula span{background:var(--paper);border-radius:999px;padding:4px 12px}
+.field input[type=number]{width:8rem}
 #cari-jurnal .page-head{--c:var(--t11);--ci:var(--t11i)}
 .calc-row.three .field select{min-width:9rem}
 .grid3{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
@@ -486,6 +492,14 @@ body{overflow-x:hidden}
       <rect x="81" y="73" width="5" height="15" fill="#f2c94c" stroke-width="1.4"/>
     </g>
   </symbol>
+  <symbol id="i-caridata" viewBox="0 0 100 100">
+    <image href="sheep-format.png" x="0" y="0" width="100" height="100"/>
+    <g stroke="#1f3d86" stroke-width="2.2" stroke-linejoin="round">
+      <rect x="60" y="66" width="34" height="28" rx="3" fill="#fff"/>
+      <path d="M60 75h34M60 84h34M72 66v28M83 66v28" stroke-width="1.5"/>
+      <rect x="60" y="66" width="34" height="9" rx="3" fill="#8fd3dc" stroke-width="2.2"/>
+    </g>
+  </symbol>
   <symbol id="i-carijurnal" viewBox="0 0 100 100">
     <image href="sheep-halaman.png" x="0" y="0" width="100" height="100"/>
     <g stroke="#1f3d86" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round">
@@ -585,6 +599,13 @@ body{overflow-x:hidden}
     <section class="apps">
       <div class="apps-head"><h2>Menu Layanan</h2><span>Klik untuk cek harga</span></div>
     <nav class="tiles app-grid" aria-label="Menu layanan">
+      <a class="tile" href="#cari-data">
+        <span class="ico"><svg><use href="#i-caridata"/></svg></span>
+        <span class="from"><span class="m">Mulai </span>Rp2.000/data</span>
+        <h2>Cari &amp; Tabulasi Data</h2>
+        <p>Pengumpulan dan tabulasi data perusahaan + kalkulator</p>
+        <span class="go">Lihat harga <svg width="18" height="18"><use href="#i-next"/></svg></span>
+      </a>
       <a class="tile" href="#cari-jurnal">
         <span class="ico"><svg><use href="#i-carijurnal"/></svg></span>
         <span class="from"><span class="m">Mulai </span>Rp9.000</span>
@@ -1108,6 +1129,56 @@ body{overflow-x:hidden}
     <div class="order" data-order></div>
   </div>
 
+  <!-- CARI & TABULASI DATA -->
+  <div class="view" id="cari-data" hidden>
+    <a class="back" href="#"><svg width="18" height="18"><use href="#i-back"/></svg>Kembali ke menu</a>
+    <div class="page-head">
+      <span class="ico"><svg><use href="#i-caridata"/></svg></span>
+      <div><h2>Cari &amp; Tabulasi Data</h2><p>Pengumpulan dan tabulasi data perusahaan untuk penelitian. Biaya dihitung dari jumlah perusahaan, periode penelitian, jumlah variabel, dan tingkat kesulitan data.</p></div>
+    </div>
+    <div class="formula" aria-label="Rumus jumlah data"><span>Jumlah perusahaan</span>×<span>Jumlah tahun</span>×<span>Jumlah variabel</span>=<span>Jumlah data</span></div>
+    <div class="grid">
+      <div class="card">
+        <h4><small>Tarif per data</small>Tingkat kesulitan</h4>
+        <ul class="tiers">
+          <li><span class="rev">Data mudah</span><span class="price">Rp2.000</span></li>
+          <li><span class="rev">Data sulit</span><span class="price">Rp3.000</span></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4><small>Contoh: 30 perusahaan, 2021–2025 (5 tahun)</small>Jumlah observasi 150</h4>
+        <ul class="tiers">
+          <li><span class="rev">1 variabel · data mudah<small>150 data × Rp2.000</small></span><span class="price">Rp300.000</span></li>
+          <li><span class="rev">1 variabel · data sulit<small>150 data × Rp3.000</small></span><span class="price">Rp450.000</span></li>
+          <li><span class="rev">2 variabel · data mudah<small>300 data × Rp2.000</small></span><span class="price">Rp600.000</span></li>
+          <li><span class="rev">2 variabel · data sulit<small>300 data × Rp3.000</small></span><span class="price">Rp900.000</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="card calc">
+      <h4><small>Kalkulator</small>Hitung biaya cari &amp; tabulasi data</h4>
+      <div class="calc-row three">
+        <div class="field"><label for="cd-perusahaan">Jumlah perusahaan</label><input id="cd-perusahaan" type="number" inputmode="numeric" min="1" step="1" value="30"></div>
+        <div class="field"><label for="cd-tahun">Jumlah tahun</label><select id="cd-tahun"></select></div>
+        <div class="field"><label for="cd-variabel">Jumlah variabel</label><select id="cd-variabel"></select></div>
+      </div>
+      <fieldset class="seg">
+        <legend>Tingkat kesulitan data</legend>
+        <div>
+          <label><input type="radio" name="cd-level" id="cd-mudah" value="2000" checked><span>Data mudah · Rp2.000</span></label>
+          <label><input type="radio" name="cd-level" id="cd-sulit" value="3000"><span>Data sulit · Rp3.000</span></label>
+        </div>
+      </fieldset>
+      <div class="result" aria-live="polite">
+        <small>Estimasi biaya</small>
+        <span class="total" id="cd-total">Rp300.000</span>
+        <small id="cd-detail">30 perusahaan × 5 tahun × 1 variabel = 150 data × Rp2.000</small>
+      </div>
+      <p class="note">Tingkat kesulitan data ditentukan setelah joki cek sumber datanya. Kalau ragu, tanya dulu lewat form ya.</p>
+    </div>
+    <div class="order" data-order></div>
+  </div>
+
   <!-- CARI JURNAL -->
   <div class="view" id="cari-jurnal" hidden>
     <a class="back" href="#"><svg width="18" height="18"><use href="#i-back"/></svg>Kembali ke menu</a>
@@ -1192,7 +1263,7 @@ body{overflow-x:hidden}
 (function(){
   // Order strip on every detail page
   var layanan={bab:'Skripsi Bab I / II / III / IV','skripsi-full':'Skripsi Full',paket:'Proposal Skripsi','per-halaman':'Makalah, Essay, atau Tugas Lainnya','convert-jurnal':'Skripsi ke Artikel','formatting':'Formatting Makalah / Formatting Skripsi',metopen:'Tugas Lainnya'};
-  var opsi={'cari-jurnal':'Cari Jurnal','power-point':'Power Point','literature-review':'Literature Review','skripsi-full':'Skripsi Full',paket:'Proposal Skripsi','per-halaman':'Makalah','convert-jurnal':'Skripsi ke Artikel','formatting':'Formatting Skripsi',metopen:'Tugas Lainnya'};
+  var opsi={'cari-data':'Tugas Lainnya','cari-jurnal':'Cari Jurnal','power-point':'Power Point','literature-review':'Literature Review','skripsi-full':'Skripsi Full',paket:'Proposal Skripsi','per-halaman':'Makalah','convert-jurnal':'Skripsi ke Artikel','formatting':'Formatting Skripsi',metopen:'Tugas Lainnya'};
   function formUrl(mode,v){var q='?mode='+mode+(opsi[v]?'&layanan='+encodeURIComponent(opsi[v]):'');return 'https://jokibyjerissa.vercel.app/'+q+'#pesan';}
   document.querySelectorAll('[data-order]').forEach(function(el){
     var v=el.closest('.view').id, l=layanan[v];
@@ -1209,7 +1280,7 @@ body{overflow-x:hidden}
     a.href='https://jokibyjerissa.vercel.app/?mode=tanya&layanan='+encodeURIComponent(a.dataset.layanan)+'#pesan';
     a.target='_blank'; a.rel='noopener';
   });
-  var views=['bab','paket','per-halaman','convert-jurnal','formatting','metopen','lainnya','skripsi-full','literature-review','power-point','cari-jurnal'];
+  var views=['bab','paket','per-halaman','convert-jurnal','formatting','metopen','lainnya','skripsi-full','literature-review','power-point','cari-jurnal','cari-data'];
   var alias={proposal:'bab'};
   function route(){
     var h=location.hash.slice(1); h=alias[h]||h;
@@ -1354,6 +1425,23 @@ body{overflow-x:hidden}
     cjDet.textContent=n+' sumber'+(disc?' · hemat '+fmt(disc):'');
   }
   cj.forEach(function(x){x[0].addEventListener('change',cjUpdate)}); cjUpdate();
+
+  // Cari & tabulasi data calculator: perusahaan x tahun x variabel x tarif
+  (function(){
+    var pr=document.getElementById('cd-perusahaan'),th=document.getElementById('cd-tahun'),vr=document.getElementById('cd-variabel'),tot=document.getElementById('cd-total'),det=document.getElementById('cd-detail');
+    if(!pr)return;
+    for(var a=1;a<=15;a++){var o=document.createElement('option');o.value=a;o.textContent=a+' tahun';if(a===5)o.selected=true;th.appendChild(o);}
+    for(var b=1;b<=15;b++){var o2=document.createElement('option');o2.value=b;o2.textContent=b+' variabel';vr.appendChild(o2);}
+    function upd(){
+      var n=Math.floor(Number(pr.value)),t=Number(th.value),v=Number(vr.value),r=Number(document.querySelector('input[name="cd-level"]:checked').value);
+      if(!n||n<1){tot.textContent='Rp0';det.textContent='Masukkan jumlah perusahaan dulu, ya';return;}
+      var d=n*t*v; tot.textContent=fmt(d*r);
+      det.textContent=n+' perusahaan × '+t+' tahun × '+v+' variabel = '+d.toLocaleString('id-ID')+' data × '+fmt(r);
+    }
+    pr.addEventListener('input',upd);[th,vr].forEach(function(x){x.addEventListener('change',upd)});
+    document.querySelectorAll('input[name="cd-level"]').forEach(function(x){x.addEventListener('change',upd)});
+    upd();
+  })();
 })();
 </script>
 
